@@ -1,0 +1,16 @@
+{% extends 'base.html' %}{% block content %}
+<p><a href="/">← Dashboard</a></p><h1>{{ batch.name }}</h1>
+<p>Each photo starts in its own group. Move photos to another group to combine images of one garment.
+Empty groups can be ignored for now.</p>
+{% for item in batch.items.all %}<div class="card">
+<h2>{{ item.sku }} · {{ item.get_status_display }}</h2>
+<p>{{ item.title|default:"No title yet" }} {% if item.price %}· £{{ item.price }}{% endif %}</p>
+<div class="photos">{% for photo in item.photos.all %}
+<div class="photo"><img src="{{ photo.image.url }}" alt="{{ photo.original_name }}">
+<form action="{% url 'move_photo' photo.pk %}" method="post">{% csrf_token %}
+<label><small>Move to item</small><select name="target">
+{% for target in batch.items.all %}<option value="{{ target.pk }}" {% if target.pk == item.pk %}selected{% endif %}>{{ target.sku }}</option>{% endfor %}
+</select></label><button>Move</button></form></div>{% endfor %}</div>
+<p><a class="button" href="{% url 'item' item.pk %}">Edit listing</a></p>
+<form action="{% url 'approve' item.pk %}" method="post">{% csrf_token %}<button>Approve draft</button></form>
+</div>{% endfor %}{% endblock %}

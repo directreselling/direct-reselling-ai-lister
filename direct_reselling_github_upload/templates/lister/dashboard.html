@@ -1,0 +1,11 @@
+{% extends 'base.html' %}{% block content %}
+<h1>Listing dashboard</h1><p>Upload a batch of clothing photos. No listing is published automatically.</p>
+<div class="card"><h2>New photo batch</h2><form method="post" action="{% url 'upload' %}" enctype="multipart/form-data">
+{% csrf_token %}<label>Batch name <input name="name" placeholder="Wednesday sourcing"></label>
+<label>Photos (select multiple) <input type="file" name="photos" accept="image/jpeg,image/png,image/webp" multiple required></label>
+<p><small>Up to 300 photos per upload. Photos initially remain separate until you group them.</small></p>
+<button>Upload photos</button></form></div>
+<h2>Saved batches</h2>{% for batch in batches %}
+<div class="card"><a href="{% url 'batch' batch.pk %}"><strong>{{ batch.name }}</strong></a>
+<p>{{ batch.items.count }} item groups · {{ batch.created_at|date:"d M Y H:i" }}</p></div>
+{% empty %}<p>No batches yet.</p>{% endfor %}{% endblock %}

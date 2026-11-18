@@ -1,0 +1,18 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Direct Reselling AI Lister</title>
+<style>
+:root{font-family:system-ui,Arial;background:#f5f7fb;color:#15233a}
+body{margin:0}header{background:#152c4a;color:white;padding:18px 5%}
+header a{color:white}main{max-width:1050px;margin:auto;padding:24px 5%}
+.card{background:white;padding:20px;border-radius:14px;margin:16px 0;box-shadow:0 2px 10px #16213e13}
+button,.button{background:#2458bd;color:white;border:0;border-radius:8px;padding:10px 15px;cursor:pointer;text-decoration:none}
+input,textarea,select{max-width:100%;padding:9px;border:1px solid #bbc5d3;border-radius:6px}
+label{display:block;margin-top:12px}img{width:115px;height:115px;object-fit:cover;border-radius:8px}
+.photos{display:flex;flex-wrap:wrap;gap:12px}.photo{border:1px solid #ddd;padding:8px;border-radius:8px}
+small{color:#596579}.messages{padding:10px;background:#eaf3ff}
+</style></head><body><header><strong>Direct Reselling AI Lister</strong>
+{% if user.is_authenticated %} · <a href="/">Dashboard</a> ·
+<form action="{% url 'logout' %}" method="post" style="display:inline">{% csrf_token %}<button>Log out</button></form>{% endif %}
+</header><main>{% for message in messages %}<p class="messages">{{ message }}</p>{% endfor %}
+{% block content %}{% endblock %}</main></body></html>
