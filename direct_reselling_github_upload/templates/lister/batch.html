@@ -6,7 +6,7 @@ Empty groups can be ignored for now.</p>
 <h2>{{ item.sku }} · {{ item.get_status_display }}</h2>
 <p>{{ item.title|default:"No title yet" }} {% if item.price %}· £{{ item.price }}{% endif %}</p>
 <div class="photos">{% for photo in item.photos.all %}
-<div class="photo"><img src="{{ photo.image.url }}" alt="{{ photo.original_name }}">
+<div class="photo"><img src="{% url 'view_photo' photo.pk %}" alt="{{ photo.original_name }}">
 <form action="{% url 'move_photo' photo.pk %}" method="post">{% csrf_token %}
 <label><small>Move to item</small><select name="target">
 {% for target in batch.items.all %}<option value="{{ target.pk }}" {% if target.pk == item.pk %}selected{% endif %}>{{ target.sku }}</option>{% endfor %}
