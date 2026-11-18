@@ -34,9 +34,6 @@ if os.environ.get("POSTGRES_HOST"):
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD", ""),
         "HOST": os.environ["POSTGRES_HOST"], "PORT": "5432"}}
 else:
-   
-import os
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -45,9 +42,6 @@ DATABASES = {
         "PASSWORD": os.environ["POSTGRES_PASSWORD"],
         "HOST": os.environ["POSTGRES_HOST"],
         "PORT": "5432",
-        "OPTIONS": {
-            "sslmode": "prefer",
-        },
     }
 }
 
