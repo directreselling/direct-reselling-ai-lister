@@ -1,4 +1,4 @@
-import uuid
+import os
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
@@ -127,8 +127,30 @@ def ai_generate(request, pk):
     messages.success(request, 'AI draft generated. Review all suggested fields before approval.')
     return redirect('item', pk=item.pk)
 
+
 @login_required
 def view_photo(request, pk):
+    from django.http import FileResponse, Http404
+    from django.shortcuts import redirect
+
+    photo = get_object_or_404(
+        Photo,
+        pk=pk,
+        item__batch__owner=request.user,
+    )
+
+    # Backblaze B2: create a temporary signed photo URL.
+    if os.environ.get("B2_BUCKET_NAME"):
+        return redirect(photo.image.url)
+
+    # Local development: serve the photo directly.
+    try:
+        image = photo.image.open("rb")
+    except (OSError, ValueError, FileNotFoundError):
+        raise Http404("Photo file unavailable")
+
+    return FileResponse(image)
+
     photo = get_object_or_404(
         Photo,
         pk=pk,
