@@ -126,3 +126,28 @@ def ai_generate(request, pk):
         item.save()
     messages.success(request, 'AI draft generated. Review all suggested fields before approval.')
     return redirect('item', pk=item.pk)
+
+@login_required
+def view_photo(request, pk):
+    photo = get_object_or_404(
+        Photo,
+        pk=pk,
+        item__batch__owner=request.user,
+    )
+
+    from django.http import FileResponse, Http404
+
+    try:
+        image = photo.image.open("rb")
+    except (OSError, ValueError, FileNotFoundError):
+        raise Http404("Photo file unavailable")
+
+    return FileResponse(
+        image,
+        content_type="image/jpeg" if photo.image.name.lower().endswith(
+            (".jpg", ".jpeg")
+        ) else (
+            "image/png" if photo.image.name.lower().endswith(".png")
+            else "image/webp"
+        ),
+    )
