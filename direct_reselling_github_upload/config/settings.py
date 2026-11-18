@@ -51,8 +51,35 @@ TIME_ZONE = "Europe/London"
 USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-MEDIA_URL = "media/"
+
+MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Store uploaded photographs in Backblaze B2.
+# Keep local storage available for development.
+if os.environ.get("B2_BUCKET_NAME"):
+    INSTALLED_APPS += ["storages"]
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "access_key": os.environ["B2_KEY_ID"],
+                "secret_key": os.environ["B2_APPLICATION_KEY"],
+                "bucket_name": os.environ["B2_BUCKET_NAME"],
+                "endpoint_url": os.environ["B2_ENDPOINT_URL"],
+                "region_name": None,
+                "default_acl": None,
+                "querystring_auth": True,
+                "querystring_expire": 300,
+                "file_overwrite": False,
+            },
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
